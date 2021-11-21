@@ -1,0 +1,147 @@
+interface IProduct
+{
+	string name;
+	int articleNumber;
+	int quantity;
+	
+	List<int> prices;
+	List<string> pictures;
+	string productDeliveryDetails;
+	
+	void DeliverProducts(string productDeliveryDetails);
+	
+	string ToString();
+}
+
+class NormalProduct implements IProduct
+{
+	int stock;
+	
+	void DeliverProducts(string productDeliveryDetails);
+
+}
+
+enum DigitalProductDeliveryEnum
+{
+	EMAIL,
+	DOWNLOADLINK
+}
+
+class DigitalProduct implements IProduct
+{
+	DigitalProductDeliveryEnum enum;
+	
+	DigitalProduct(DigitalProductDeliveryEnum enum)
+	{
+		this.enum = enum;
+	}
+	
+	void DeliverProducts(string productDeliveryDetails);
+	
+	string ToString()
+	{
+		return name + " " + articleNumber + " " + quantity + " " + prices[0];
+	}
+}
+
+class ShoppingCart
+{
+	int currentTotalPrice;
+	List<Product> cartProducts;
+	
+	void DisplayAllProducts();
+	void BuyProducts(List<Product> products);
+	
+	void AddProduct(IProduct product)
+	{
+		if(product instanceof NormalProduct)
+		{
+			if(product.quantity <= product.stock)
+			{
+				cartProducts.Add(product);
+				product.stock--;
+				currentTotalPrice += (product.quantity * product.prices[0]);
+			}
+		}
+		else if (product instanceof DigitalProduct)
+		{
+			cartProducts.Add(product);
+			currentTotalPrice += (product.quantity * product.prices[0]);
+		}
+	}
+	void RemoveProduct(Product product)
+	{
+		if(product instanceof NormalProduct)
+		{
+				cartProducts.Remove(product);
+				product.stock++;
+				currentTotalPrice -= (product.quantity * product.prices[0]);
+		}
+		else if (product instanceof DigitalProduct)
+		{
+			cartProducts.Remove(product);
+			currentTotalPrice -= (product.quantity * product.prices[0]);
+		}
+	}
+	
+	void PurchaseAllProductsInCart(List<IProduct> cartProducts)
+	{
+		
+	}
+	
+	
+	void DisplayAllProducts(List<IProduct> cartProducts)
+	{
+		foreach(IProduct product : cartProducts)
+		{
+			product.ToString();
+		}
+	}
+}
+
+class Category
+{
+
+	string name;
+	List<Product> productList;
+	List<Category> subCategories;
+	
+	void displayCategoryList(string categoryName);
+	
+	void displayCategoryProductList(string name, List<Product> productList);
+	
+}
+
+class Address
+{
+	int number;
+	string street;
+	string city;
+	string province;
+	string zip;
+	string country;
+	
+}
+Interface IUser
+{
+	string name;
+	List<Address> addresses;
+	string email;
+	string phoneNumber;
+	ShopppingCart cart;
+	
+	SubscribeToProductEvent(Product product);
+	
+}
+
+class Customer implements IUser
+{
+	SubscribeToProductEvent(Product product);
+}
+
+class Seller implements IUser
+{
+	SubscribeToProductEvent(Product product);
+	CreateProducts();
+}
+
